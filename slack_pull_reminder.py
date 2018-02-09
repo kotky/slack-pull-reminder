@@ -9,11 +9,13 @@ POST_URL = 'https://slack.com/api/chat.postMessage'
 ignore = os.environ.get('IGNORE_WORDS')
 IGNORE_WORDS = ignore.split(',') if ignore else []
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', '#general')
+REPOSITORY_FULL_NAME = os.environ.get('REPOSITORY')
 
 try:
     SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
     GITHUB_API_TOKEN = os.environ['GITHUB_API_TOKEN']
     ORGANIZATION = os.environ['ORGANIZATION']
+    
 except KeyError as error:
     sys.stderr.write('Please set the environment variable {0}'.format(error))
     sys.exit(1)
@@ -61,10 +63,10 @@ def fetch_organization_pulls(organization_name):
     lines = []
 
     for repository in organization.repositories():
-        unchecked_pulls = fetch_repository_pulls(repository)
-        lines += format_pull_requests(unchecked_pulls, organization_name,
-                                      repository.name)
-
+        if NOT REPOSITORY_FULL_NAME OR REPOSITORY_FULL_NAME == repository.full_name:
+            unchecked_pulls = fetch_repository_pulls(repository)
+            lines += format_pull_requests(unchecked_pulls, organization_name,
+                                          repository.name)
     return lines
 
 
