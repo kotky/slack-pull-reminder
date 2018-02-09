@@ -9,7 +9,7 @@ POST_URL = 'https://slack.com/api/chat.postMessage'
 ignore = os.environ.get('IGNORE_WORDS')
 IGNORE_WORDS = ignore.split(',') if ignore else []
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', '#general')
-REPOSITORY_FULL_NAME = os.environ.get('REPOSITORY')
+REPOSITORY_FULL_NAME = os.environ.get('REPOSITORY_FULL_NAME')
 
 try:
     SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
