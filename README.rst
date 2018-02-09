@@ -11,7 +11,7 @@ Installation
 
 .. code:: bash
 
-    $ pip install slack-pull-reminder
+    $ pip install git+https://github.com/kotky/slack-pull-reminder.git
 
 Usage
 -----
@@ -33,6 +33,7 @@ Optional
    pull request to be ignored.
 -  ``SLACK_CHANNEL``: The Slack channel you want the reminders to be
    posted in, defaults to #general.
+-  ``REPOSITORY_FULL_NAME``: The GitHub organization repository that will filter list of pull requests.
 
 Example
 ~~~~~~~
