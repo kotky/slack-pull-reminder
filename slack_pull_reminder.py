@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 import requests
 from github3 import login
@@ -7,13 +8,13 @@ from github3 import login
 ignore = os.environ.get('IGNORE_WORDS')
 IGNORE_WORDS = ignore.split(',') if ignore else []
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL')
-REPOSITORY_FULL_NAME_LIST = os.environ.get('REPOSITORY_FULL_NAME','').split(',')
+REPOSITORY_FULL_NAME_LIST = os.environ.get('REPOSITORY_FULL_NAME_LIST','').split(',')
 
 try:
     SLACK_INCOMING_WEBHOOK_URL = os.environ['SLACK_INCOMING_WEBHOOK_URL']
     GITHUB_API_TOKEN = os.environ['GITHUB_API_TOKEN']
     ORGANIZATION = os.environ['ORGANIZATION']
-    
+
 except KeyError as error:
     sys.stderr.write('Please set the environment variable {0}'.format(error))
     sys.exit(1)
@@ -59,9 +60,8 @@ def fetch_organization_pulls(organization_name):
     client = login(token=GITHUB_API_TOKEN)
     organization = client.organization(organization_name)
     lines = []
-
     for repository in organization.repositories():
-        if REPOSITORY_FULL_NAME == [''] OR repository.full_name IN REPOSITORY_FULL_NAME_LIST:
+        if REPOSITORY_FULL_NAME_LIST == [''] or repository.full_name in REPOSITORY_FULL_NAME_LIST:
             unchecked_pulls = fetch_repository_pulls(repository)
             lines += format_pull_requests(unchecked_pulls, organization_name,
                                           repository.name)
@@ -76,10 +76,9 @@ def send_to_slack(text):
     }
     if SLACK_CHANNEL:
         payload['channel'] = SLACK_CHANNEL
-    response = requests.post(SLACK_INCOMING_WEBHOOK_URL, data=payload)
-    answer = response.json()
-    if not answer['ok']:
-        raise Exception(answer['error'])
+    response = requests.post(SLACK_INCOMING_WEBHOOK_URL, data=json.dumps(payload))
+    if not response.status_code == 200:
+        raise Exception(response.status_code)
 
 
 def cli():
