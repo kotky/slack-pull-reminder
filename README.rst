@@ -21,8 +21,8 @@ slack-pull-reminder is configured using environment variables:
 Required
 ~~~~~~~~
 
--  ``SLACK_API_TOKEN``
--  ``GITHUB_API_TOKEN``
+-  ``SLACK_INCOMING_WEBHOOK_URL``: Full incoming webhook generated url
+-  ``GITHUB_API_TOKEN``: generated on user profile with full repo read right
 -  ``ORGANIZATION``: The GitHub organization you want pull request
    reminders for.
 
@@ -32,15 +32,15 @@ Optional
 -  ``IGNORE_WORDS``: A comma-separated list of words that will cause a
    pull request to be ignored.
 -  ``SLACK_CHANNEL``: The Slack channel you want the reminders to be
-   posted in, defaults to #general.
--  ``REPOSITORY_FULL_NAME``: The GitHub organization repository that will filter list of pull requests.
+   posted in, defaults to webhook assigned.
+-  ``REPOSITORY_FULL_NAME_LIST``: The GitHub organization repositories that will filter list of pull requests.
 
 Example
 ~~~~~~~
 
 .. code:: bash
 
-    $ ORGANIZATION="orgname" SLACK_API_TOKEN="token" GITHUB_API_TOKEN="token" slack-pull-reminder
+    $ ORGANIZATION="org1" SLACK_INCOMING_WEBHOOK_URL="url" GITHUB_API_TOKEN="token" REPOSITORY_FULL_NAME_LIST="org1/repo1,org1/repo2" slack-pull-reminder
 
 Cronjob
 ~~~~~~~
@@ -59,7 +59,7 @@ License
 
 (The MIT License)
 
-Copyright (c) Martin Ek mail@ekmartin.com
+Copyright (c) Josip Kotarac jkotarac@extensionengine.com
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
