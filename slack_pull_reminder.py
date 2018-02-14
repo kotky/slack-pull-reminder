@@ -4,15 +4,13 @@ import sys
 import requests
 from github3 import login
 
-POST_URL = 'https://slack.com/api/chat.postMessage'
-
 ignore = os.environ.get('IGNORE_WORDS')
 IGNORE_WORDS = ignore.split(',') if ignore else []
-SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', '#general')
+SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL')
 REPOSITORY_FULL_NAME_LIST = os.environ.get('REPOSITORY_FULL_NAME','').split(',')
 
 try:
-    SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
+    SLACK_INCOMING_WEBHOOK_URL =  = os.environ['SLACK_INCOMING_WEBHOOK_URL']
     GITHUB_API_TOKEN = os.environ['GITHUB_API_TOKEN']
     ORGANIZATION = os.environ['ORGANIZATION']
     
@@ -72,14 +70,13 @@ def fetch_organization_pulls(organization_name):
 
 def send_to_slack(text):
     payload = {
-        'token': SLACK_API_TOKEN,
-        'channel': SLACK_CHANNEL,
         'username': 'Pull Request Reminder',
         'icon_emoji': ':bell:',
         'text': text
     }
-
-    response = requests.post(POST_URL, data=payload)
+    if SLACK_CHANNEL:
+        payload['channel'] = SLACK_CHANNEL
+    response = requests.post(SLACK_INCOMING_WEBHOOK_URL, data=payload)
     answer = response.json()
     if not answer['ok']:
         raise Exception(answer['error'])
