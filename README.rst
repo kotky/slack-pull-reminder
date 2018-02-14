@@ -52,7 +52,7 @@ Example that runs slack-pull-reminder every day at 10:00:
 
 .. code:: bash
 
-    0 10 * * * ORGANIZATION="orgname" SLACK_API_TOKEN="token" GITHUB_API_TOKEN="token" slack-pull-reminder
+    0 10 * * * ORGANIZATION="org1" SLACK_INCOMING_WEBHOOK_URL="url" GITHUB_API_TOKEN="token" REPOSITORY_FULL_NAME_LIST="org1/repo1,org1/repo2" slack-pull-reminder
 
 License
 -------
