@@ -9,7 +9,7 @@ POST_URL = 'https://slack.com/api/chat.postMessage'
 ignore = os.environ.get('IGNORE_WORDS')
 IGNORE_WORDS = ignore.split(',') if ignore else []
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', '#general')
-REPOSITORY_FULL_NAME = os.environ.get('REPOSITORY_FULL_NAME')
+REPOSITORY_FULL_NAME_LIST = os.environ.get('REPOSITORY_FULL_NAME','').split(',')
 
 try:
     SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
@@ -63,7 +63,7 @@ def fetch_organization_pulls(organization_name):
     lines = []
 
     for repository in organization.repositories():
-        if NOT REPOSITORY_FULL_NAME OR REPOSITORY_FULL_NAME == repository.full_name:
+        if REPOSITORY_FULL_NAME == [''] OR repository.full_name IN REPOSITORY_FULL_NAME_LIST:
             unchecked_pulls = fetch_repository_pulls(repository)
             lines += format_pull_requests(unchecked_pulls, organization_name,
                                           repository.name)
